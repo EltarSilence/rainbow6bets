@@ -23,17 +23,24 @@
         <a class="nav-link" href="user.php">
           <?php
             if (isset($_SESSION['id'])){
-              echo retrieveName($_SESSION['id']);
+              echo retrieveUserData('username', $_SESSION['id']);
             }
             else {
-              echo 'Not logged in';
+              echo 'Non sei loggato';
             }
           ?>
         </a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">1000 &euro;</a>
+      <?php
+        if (isset($_SESSION['id'])){
+      ?>
+          <li class="nav-item active">
+            <a class="nav-link" href="#">
+              <?php
+                echo retrieveUserData('money', $_SESSION['id']);
+              ?> &euro;</a>
       </li>
+      <?php } ?>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown">Azioni</a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
