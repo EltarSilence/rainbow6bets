@@ -1,5 +1,40 @@
 <?php
+session_start();
 require_once 'config/dbconn.php';
+if (isset($_SESSION['id'])){
+  header('Location: index.php');
+}
+
+if (isset($_POST['login'])){
+  $unm = $_POST['username'];
+  $psw = $_POST['password'];
+  $lgd = false;
+  $sql = "SELECT * FROM utenti";
+  $result = $conn->query($sql);
+
+  while ($row = $result->fetch_assoc()){
+    if ($row['username'] == $unm && $row['password'] == $psw){
+      $_SESSION['id'] = $row['id'];
+      $lgd = true;
+      break;
+    }
+  }
+
+  if ($lgd){
+    header('Location: index.php');
+  }
+  else {
+    header('Location: login.php?err=1');
+  }
+}
+
+if (isset($_GET['err'])){
+  echo '<div class="alert alert-danger" role="alert">
+    Credenziali errate
+  </div>';
+
+}
+
 ?>
 
 <html>
@@ -16,7 +51,7 @@ require_once 'config/dbconn.php';
 </head>
 <body>
   <div class="login-form">
-    <form action="" method="post">
+    <form id="login" action="" method="post">
       <div class="avatar">
         <img src="" alt="Avatar">
       </div>
@@ -27,12 +62,14 @@ require_once 'config/dbconn.php';
       <div class="form-group">
         <input type="password" class="form-control" name="password" placeholder="Password" required="required">
       </div>
+
       <div class="form-group">
-        <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+        <button form="login" type="submit" class="btn btn-primary btn-lg btn-block" name="login">Login</button>
       </div>
     </form>
     <p class="text-center small">Non hai un account? <a href="register.php">Registrati qui!</a></p>
     <p class="text-center small"><a href="index.php">Torna alla homepage</a></p>
   </div>
+
 </body>
 </html>

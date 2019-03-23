@@ -1,4 +1,6 @@
 <?php
+  session_start();
+  require_once 'config/heart.php';
   require_once 'config/dbconn.php';
 ?>
 

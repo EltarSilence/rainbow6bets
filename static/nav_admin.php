@@ -20,7 +20,16 @@
     </ul>
     <ul class="navbar-nav ml-md-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="user.php">EltarSilence</a>
+        <a class="nav-link" href="user.php">
+          <?php
+            if (isset($_SESSION['id'])){
+              echo retrieveName($_SESSION['id']);
+            }
+            else {
+              echo 'Not logged in';
+            }
+          ?>
+        </a>
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="#">1000 &euro;</a>
