@@ -10,4 +10,16 @@
     }
     return $res;
   }
+
+  //da id team a nome team
+  function getTeamNameFMid($id){
+    require 'dbconn.php';
+    $sql = "SELECT nome FROM teams WHERE id = $id";
+    $result = $conn->query($sql);
+    while($row = $result->fetch_assoc()){
+      $res = $row['nome'];
+      break;
+    }
+    return $res;
+  }
 ?>

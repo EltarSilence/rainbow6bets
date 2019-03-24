@@ -2,6 +2,36 @@
   session_start();
   require_once 'config/heart.php';
   require_once 'config/dbconn.php';
+  if (isset($_GET['cat'])){
+    //ricezione categoria
+    if ($_GET['cat'] == "proleague"){
+      $proleague_id = 1;
+      //proleague
+      $matches_query = "SELECT * FROM partite AS P WHERE category_id = $proleague_id";
+      $result = $conn->query($matches_query);
+      $matches = '<table class="table table-bordered text-center">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Team 1</th>
+          <th scope="col">Team 2</th>
+          <th scope="col">1</th>
+          <th scope="col">X</th>
+          <th scope="col">2</th>
+        </tr>
+      </thead>
+      <tbody>';
+      while ($mtc = $result->fetch_assoc()){
+        $matches .= '<tr>
+          <td>'.getTeamNameFMid($mtc['id_team1']).'</td>
+          <td>'.getTeamNameFMid($mtc['id_team2']).'</td>
+          <td>'.number_format((float)$mtc['odd_1'], 2, ',', '').'</td>
+          <td>'.number_format((float)$mtc['odd_X'], 2, ',', '').'</td>
+          <td>'.number_format((float)$mtc['odd_2'], 2, ',', '').'</td>
+        </tr>';
+      }
+      $matches.='</tbody></table>';
+    }
+  }
 ?>
 
 <html>
@@ -35,6 +65,11 @@
   				</div>
   				<div class="col-md-8">
             <!-- CENTER COLOUMN -->
+            <?php
+              if (isset($matches) && $matches != ""){
+                echo $matches;
+              }
+            ?>
             <!-- / CENTER COLOUMN -->
   				</div>
   				<div class="col-md-2">
