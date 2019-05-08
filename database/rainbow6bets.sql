@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mar 23, 2019 alle 16:09
+-- Creato il: Mar 24, 2019 alle 15:44
 -- Versione del server: 10.1.37-MariaDB
 -- Versione PHP: 7.2.12
 
@@ -34,37 +34,15 @@ CREATE TABLE `categorie` (
   `location` varchar(25) NOT NULL,
   `premio` varchar(25) NOT NULL,
   `region` varchar(25) NOT NULL,
-  `isDrawOK` int(11) NOT NULL
+  `isDrawOK` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
 --
--- Struttura della tabella `esiti`
+-- Dump dei dati per la tabella `categorie`
 --
 
-CREATE TABLE `esiti` (
-  `id` int(11) NOT NULL,
-  `multipla_id` int(11) NOT NULL,
-  `partita_id` int(11) NOT NULL,
-  `titolo` varchar(150) NOT NULL,
-  `quota` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Struttura della tabella `multiple`
---
-
-CREATE TABLE `multiple` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `datetime` datetime NOT NULL,
-  `status` int(11) NOT NULL,
-  `importo` int(11) NOT NULL,
-  `quotaTotale` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `categorie` (`id`, `nome`, `location`, `premio`, `region`, `isDrawOK`) VALUES
+(1, 'ESL Pro League', 'Online', 'tbd', 'EU', 1);
 
 -- --------------------------------------------------------
 
@@ -78,8 +56,20 @@ CREATE TABLE `partite` (
   `id_team1` int(11) NOT NULL,
   `id_team2` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
-  `result` varchar(15) NOT NULL
+  `result` varchar(15) DEFAULT NULL,
+  `category_id` int(11) NOT NULL,
+  `odd_1` float NOT NULL,
+  `odd_X` float NOT NULL,
+  `odd_2` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `partite`
+--
+
+INSERT INTO `partite` (`id`, `status`, `id_team1`, `id_team2`, `datetime`, `result`, `category_id`, `odd_1`, `odd_X`, `odd_2`) VALUES
+(1, 0, 1, 2, '2019-03-25 00:00:00', NULL, 1, 2.35, 3, 2.5),
+(2, 0, 2, 3, '2019-03-25 00:00:00', NULL, 1, 1.85, 3.15, 2.9);
 
 -- --------------------------------------------------------
 
@@ -95,6 +85,33 @@ CREATE TABLE `players` (
   `role` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dump dei dati per la tabella `players`
+--
+
+INSERT INTO `players` (`id`, `nickname`, `team_id`, `realname`, `role`) VALUES
+(1, 'Pengu', 1, 'Niclas', ''),
+(2, 'Kanto', 1, 'Juhani', ''),
+(3, 'SirBoss', 2, 'tbd', ''),
+(4, 'Revan', 2, 'tbd', '');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `scommesse`
+--
+
+CREATE TABLE `scommesse` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `status` int(11) NOT NULL,
+  `importo` int(11) NOT NULL,
+  `quotaTotale` float NOT NULL,
+  `id_incontro` int(11) NOT NULL,
+  `esito` varchar(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --
@@ -108,6 +125,15 @@ CREATE TABLE `teams` (
   `logo` text NOT NULL,
   `nation` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `teams`
+--
+
+INSERT INTO `teams` (`id`, `nome`, `coach`, `logo`, `nation`) VALUES
+(1, 'G2 Esports', 'ShaoUdas', '', 'GER'),
+(2, 'PENTA Sports', 'tbd', '', 'EU'),
+(3, 'Mockit', 'tbd', '', 'EU');
 
 -- --------------------------------------------------------
 
@@ -144,18 +170,6 @@ ALTER TABLE `categorie`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `esiti`
---
-ALTER TABLE `esiti`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indici per le tabelle `multiple`
---
-ALTER TABLE `multiple`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indici per le tabelle `partite`
 --
 ALTER TABLE `partite`
@@ -165,6 +179,12 @@ ALTER TABLE `partite`
 -- Indici per le tabelle `players`
 --
 ALTER TABLE `players`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indici per le tabelle `scommesse`
+--
+ALTER TABLE `scommesse`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -187,37 +207,31 @@ ALTER TABLE `utenti`
 -- AUTO_INCREMENT per la tabella `categorie`
 --
 ALTER TABLE `categorie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `esiti`
---
-ALTER TABLE `esiti`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT per la tabella `multiple`
---
-ALTER TABLE `multiple`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `partite`
 --
 ALTER TABLE `partite`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT per la tabella `players`
 --
 ALTER TABLE `players`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT per la tabella `scommesse`
+--
+ALTER TABLE `scommesse`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT per la tabella `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la tabella `utenti`
