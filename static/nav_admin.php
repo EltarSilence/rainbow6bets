@@ -28,7 +28,7 @@
             else {
               echo 'Non sei loggato';
             }
-          ?>
+          ?> <i class="fa fa-user"></i>
         </a>
       </li>
       <?php

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mar 24, 2019 alle 15:44
+-- Creato il: Mag 08, 2019 alle 19:45
 -- Versione del server: 10.1.37-MariaDB
 -- Versione PHP: 7.2.12
 
@@ -53,13 +53,14 @@ INSERT INTO `categorie` (`id`, `nome`, `location`, `premio`, `region`, `isDrawOK
 CREATE TABLE `partite` (
   `id` int(11) NOT NULL,
   `status` int(11) NOT NULL,
+  `canTie` tinyint(1) NOT NULL,
   `id_team1` int(11) NOT NULL,
   `id_team2` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
   `result` varchar(15) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
   `odd_1` float NOT NULL,
-  `odd_X` float NOT NULL,
+  `odd_X` float DEFAULT NULL,
   `odd_2` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -67,9 +68,10 @@ CREATE TABLE `partite` (
 -- Dump dei dati per la tabella `partite`
 --
 
-INSERT INTO `partite` (`id`, `status`, `id_team1`, `id_team2`, `datetime`, `result`, `category_id`, `odd_1`, `odd_X`, `odd_2`) VALUES
-(1, 0, 1, 2, '2019-03-25 00:00:00', NULL, 1, 2.35, 3, 2.5),
-(2, 0, 2, 3, '2019-03-25 00:00:00', NULL, 1, 1.85, 3.15, 2.9);
+INSERT INTO `partite` (`id`, `status`, `canTie`, `id_team1`, `id_team2`, `datetime`, `result`, `category_id`, `odd_1`, `odd_X`, `odd_2`) VALUES
+(1, 0, 1, 1, 2, '2019-05-17 21:00:00', NULL, 1, 2.35, 3, 2.45),
+(2, 0, 1, 2, 3, '2019-05-09 21:45:00', NULL, 1, 1.85, 3.15, 2.9),
+(3, 0, 0, 1, 4, '2019-05-10 21:10:00', NULL, 1, 1.7, NULL, 1.85);
 
 -- --------------------------------------------------------
 
@@ -133,7 +135,8 @@ CREATE TABLE `teams` (
 INSERT INTO `teams` (`id`, `nome`, `coach`, `logo`, `nation`) VALUES
 (1, 'G2 Esports', 'ShaoUdas', '', 'GER'),
 (2, 'PENTA Sports', 'tbd', '', 'EU'),
-(3, 'Mockit', 'tbd', '', 'EU');
+(3, 'Mockit', 'tbd', '', 'EU'),
+(4, 'Natus Vincere', 'tbd', '', 'EU');
 
 -- --------------------------------------------------------
 
@@ -213,7 +216,7 @@ ALTER TABLE `categorie`
 -- AUTO_INCREMENT per la tabella `partite`
 --
 ALTER TABLE `partite`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT per la tabella `players`
@@ -231,7 +234,7 @@ ALTER TABLE `scommesse`
 -- AUTO_INCREMENT per la tabella `teams`
 --
 ALTER TABLE `teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `utenti`
