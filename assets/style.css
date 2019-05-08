@@ -1,3 +1,7 @@
+table {
+  box-shadow: 5px 8px 15px 0px lightgray;
+}
+
 td {
   cursor: pointer;
 }
@@ -10,6 +14,27 @@ td#when {
 td#odd:hover {
   transition: background-color 0.5s ease, padding 0.8s linear;
   background-color: #cccccc;
+}
+
+td.separator {
+  background-color: #34495e;
+}
+
+td.tlt {
+  font-weight: bold;
+}
+
+td.tlt.min {
+  font-size: 14px;
+  text-align: right;
+  color: #2c3e50;
+}
+
+td.tlt.ttl {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 16px;
+  color: black;
 }
 
 /* PULSE ANIMATION */

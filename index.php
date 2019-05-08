@@ -7,27 +7,32 @@
     if ($_GET['cat'] == "proleague"){
       $proleague_id = 1;
       /* == PRO LEAGUE ORDINARIA == */
-      $matches_query1 = "SELECT * FROM partite AS P WHERE datetime > NOW() AND category_id = $proleague_id AND canTie = true ORDER BY datetime DESC";
-      $matches_query2 = "SELECT * FROM partite AS P WHERE datetime > NOW() AND category_id = $proleague_id AND canTie = false ORDER BY datetime DESC";
+      $matches_query1 = "SELECT * FROM partite AS P JOIN odds ON P.id = odds.id_match WHERE datetime > NOW() AND category_id = $proleague_id AND canTie = true ORDER BY datetime DESC";
+      $matches_query2 = "SELECT * FROM partite AS P JOIN odds ON P.id = odds.id_match WHERE datetime > NOW() AND category_id = $proleague_id AND canTie = false ORDER BY datetime DESC";
       $result1 = $conn->query($matches_query1);
-      $matches = '<table id="matches" class="table table-bordered text-center">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col" colspan="2">Incontro <i class="fa fa-tv"></i></th>
-          <th scope="col">1</th>
-          <th scope="col">X</th>
-          <th scope="col">2</th>
-          <th scope="col"><i class="fa fa-business-time"></i></th>
-        </tr>
-      </thead>
-      <tbody>';
+      $matches = '';
+      if ($result1->num_rows > 0){
+        $matches = '<table id="matches" class="table table-bordered text-center">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col" colspan="2">Incontro <i class="fa fa-tv"></i></th>
+            <th scope="col">1</th>
+            <th scope="col">X</th>
+            <th scope="col">2</th>
+            <th scope="col"><i class="fa fa-business-time"></i></th>
+          </tr>
+        </thead>
+        <tbody>';
+      }
+
       while ($mtc = $result1->fetch_assoc()){
+
         $matches .= '<tr id="'.$mtc['id'].'|'.getTeamNameFMid($mtc['id_team1']).'%'.getTeamNameFMid($mtc['id_team2']).'">
           <td>'.getTeamNameFMid($mtc['id_team1']).'</td>
           <td>'.getTeamNameFMid($mtc['id_team2']).'</td>
-          <td id="odd">'.number_format((float)$mtc['odd_1'], 2, '.', '').'</td>
-          <td id="odd">'.number_format((float)$mtc['odd_X'], 2, '.', '').'</td>
-          <td id="odd">'.number_format((float)$mtc['odd_2'], 2, '.', '').'</td>
+          <td id="odd" odd="1">'.number_format((float)$mtc['1'], 2, '.', '').'</td>
+          <td id="odd" odd="X">'.number_format((float)$mtc['X'], 2, '.', '').'</td>
+          <td id="odd" odd="2">'.number_format((float)$mtc['2'], 2, '.', '').'</td>
           <td id="when">'.$mtc['datetime'].'</td>
         </tr>
         <tr>
@@ -39,29 +44,45 @@
         </tr>
 
         <tr id="expand_'.$mtc['id'].'" class="collapse">
-          <td>'.$mtc['id'].'</td>
+          <td class="tlt ttl" colspan="3">Under / Over</td>
         </tr>
+
+        <tr id="expand_'.$mtc['id'].'" class="collapse">
+          <td class="separator"></td>
+          <td style="width: 16.66%" class="tlt">UNDER</td>
+          <td style="width: 16.66%" class="tlt">OVER</td>
+        </tr>
+
+        <tr id="expand_'.$mtc['id'].'" class="collapse">
+          <td class="tlt min">11,5</td>
+          <td style="width: 16.66%" id="odd" odd="U11">'.$mtc['U_11,5'].'</td>
+          <td style="width: 16.66%" id="odd" odd="O11">'.$mtc['O_11,5'].'</td>
+        </tr>
+
+        <tr><td class="separator" colspan="6"></td></tr>
         ';
       }
       $matches.='</tbody></table>';
       /* == PRO LEAGUE FINALS == */
       $result2 = $conn->query($matches_query2);
-      $matches .= '<table id="matches_notie" class="table table-bordered text-center">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col" colspan="2">Incontro <i class="fa fa-tv"></i></th>
-          <th scope="col">1</th>
-          <th scope="col">2</th>
-          <th scope="col"><i class="fa fa-business-time"></i></th>
-        </tr>
-      </thead>
-      <tbody>';
+      if ($result2->num_rows > 0){
+        $matches .= '<table id="matches_notie" class="table table-bordered text-center">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col" colspan="2">Incontro <i class="fa fa-tv"></i></th>
+            <th scope="col">1</th>
+            <th scope="col">2</th>
+            <th scope="col"><i class="fa fa-business-time"></i></th>
+          </tr>
+        </thead>
+        <tbody>';
+      }
       while ($mtc = $result2->fetch_assoc()){
         $matches .= '<tr id="'.$mtc['id'].'|'.getTeamNameFMid($mtc['id_team1']).'%'.getTeamNameFMid($mtc['id_team2']).'">
           <td>'.getTeamNameFMid($mtc['id_team1']).'</td>
           <td>'.getTeamNameFMid($mtc['id_team2']).'</td>
-          <td id="odd">'.number_format((float)$mtc['odd_1'], 2, '.', '').'</td>
-          <td id="odd">'.number_format((float)$mtc['odd_2'], 2, '.', '').'</td>
+          <td id="odd" odd="1">'.number_format((float)$mtc['1'], 2, '.', '').'</td>
+          <td id="odd" odd="2">'.number_format((float)$mtc['2'], 2, '.', '').'</td>
           <td id="when">'.$mtc['datetime'].'</td>
         </tr>
         <tr>
@@ -73,8 +94,22 @@
         </tr>
 
         <tr id="expand_'.$mtc['id'].'" class="collapse">
-          <td>'.$mtc['id'].'</td>
+          <td class="tlt ttl" colspan="3">Under / Over</td>
         </tr>
+
+        <tr id="expand_'.$mtc['id'].'" class="collapse">
+          <td class="separator"></td>
+          <td style="width: 16.66%" class="tlt">UNDER</td>
+          <td style="width: 16.66%" class="tlt">OVER</td>
+        </tr>
+
+        <tr id="expand_'.$mtc['id'].'" class="collapse">
+          <td class="tlt min">11,5</td>
+          <td style="width: 16.66%" id="odd" odd="U11">'.$mtc['U_11,5'].'</td>
+          <td style="width: 16.66%" id="odd" odd="O11">'.$mtc['O_11,5'].'</td>
+        </tr>
+
+        <tr><td class="separator" colspan="6"></td></tr>
         ';
       }
       $matches.='</tbody></table>';

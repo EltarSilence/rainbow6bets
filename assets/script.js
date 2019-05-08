@@ -3,7 +3,6 @@ var clicked = false;
 var rightrow = $('#incontro, #dataora');
 rightrow.hide();
 
-
 //Sistemare toggling freccia
 $("[id^='top_']").on('click', function(){
     $(this).find('.fa').toggleClass('fa-chevron-up fa-chevron-down');
@@ -15,6 +14,10 @@ $("[id^='matches']").on('click', 'td', function() {
 
 
   if ($(this).attr('id') == 'odd'){
+    var idmatch, match, team1, team2, dataora, giorno, anno, ora, dataRiepilogo;
+    var esito;
+
+
     rightrow.show();
     $('#thenhide').hide();
 
@@ -28,20 +31,37 @@ $("[id^='matches']").on('click', 'td', function() {
     }
 
 
-    var idmatch = $(this).parent().attr('id').split('|')[0];
-    var match = $(this).parent().attr('id').split('|')[1];
-    var team1 = match.split('%')[0];
-    var team2 = match.split('%')[1];
-    match = team1 + ' - ' + team2;
-    var dataora = new Date($(this).parent().find($('td#when')).text());
-    var giorno = dataora.getDate(); var mese = dataora.getMonth() + 1;
-    var anno = dataora.getFullYear();
-    var ora = dataora.getHours() + ':' + dataora.getMinutes();
-    var dataRiepilogo = giorno + '/' + mese + '/' + anno + ' ' + ora
 
+    if ($(this).parent().attr('id').startsWith('expand')){
+      var trtag = $(this).parent().prev().prev().prev().prev();
+      var idTR = trtag.attr('id');
+      idmatch = idTR.split('|')[0];
+      match = idTR.split('|')[1];
+      team1 = match.split('%')[0];
+      team2 = match.split('%')[1];
+      match = team1 + ' - ' + team2;
 
+      dataora = new Date(trtag.find($('td#when')).text());
+      giorno = dataora.getDate(); var mese = dataora.getMonth() + 1;
+      anno = dataora.getFullYear();
+      ora = dataora.getHours() + ':' + dataora.getMinutes();
+      dataRiepilogo = giorno + '/' + mese + '/' + anno + ' ' + ora
+    }
+    else {
+      idmatch = $(this).parent().attr('id').split('|')[0];
+      match = $(this).parent().attr('id').split('|')[1];
+      team1 = match.split('%')[0];
+      team2 = match.split('%')[1];
+      match = team1 + ' - ' + team2;
+      dataora = new Date($(this).parent().find($('td#when')).text());
+      giorno = dataora.getDate(); var mese = dataora.getMonth() + 1;
+      anno = dataora.getFullYear();
+      ora = dataora.getHours() + ':' + dataora.getMinutes();
+      dataRiepilogo = giorno + '/' + mese + '/' + anno + ' ' + ora
+    }
+    esito = $(this).attr('odd');
 
-    $('#incontro').html(match);
+    $('#incontro').html('<b>'+match+'</b>: ' + esito);
     $('#dataora').html(dataRiepilogo);
     $('#quota').html($(this).text());
     var vincita = $(this).text() * 100;
