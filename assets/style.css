@@ -37,6 +37,10 @@ td.tlt.ttl {
   color: black;
 }
 
+wrp {
+  font-size: 10px;
+}
+
 /* PULSE ANIMATION */
 .pulse {
   text-align: center;
